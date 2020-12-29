@@ -1,19 +1,18 @@
-package com.ehedgehog.android.getmovieskotlin.screens.moviesSearch
+package com.ehedgehog.android.getmovieskotlin.screens.details
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ehedgehog.android.getmovieskotlin.Application
+import com.ehedgehog.android.getmovieskotlin.network.Movie
 import com.ehedgehog.android.getmovieskotlin.network.MoviesApi
-import com.ehedgehog.android.getmovieskotlin.network.MoviesSearchItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MoviesSearchViewModel : ViewModel() {
+class MovieDetailsViewModel : ViewModel() {
 
     @Inject
     lateinit var moviesApi: MoviesApi
@@ -21,25 +20,29 @@ class MoviesSearchViewModel : ViewModel() {
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private val _listMovies = MutableLiveData<List<MoviesSearchItem>>()
-    val listMovies: LiveData<List<MoviesSearchItem>> get() = _listMovies
+    private val _movieId = MutableLiveData<String>()
+    val movieId: LiveData<String> get() = _movieId
+
+    private val _movie = MutableLiveData<Movie>()
+    val movie: LiveData<Movie> get() = _movie
 
     init {
-        Application.appComponent.injectMoviesSearchViewModel(this)
-        searchMovies("spider", "movie", 1)
+        Application.appComponent.injectMovieDetailsViewModel(this)
     }
 
-    private fun searchMovies(search: String, type: String, page: Int) {
+    fun getMovieById(movieId: String) {
         coroutineScope.launch {
             try {
-                val moviesDeferred = moviesApi.searchMovies(search, type, page)
-                val searchResult = moviesDeferred.await()
-                Log.i("searchScreen", searchResult.searchResult.toString())
-                _listMovies.value = searchResult.searchResult
+                val movieDeferred = moviesApi.getMovie(movieId)
+                _movie.value = movieDeferred.await()
             } catch (throwable: Throwable) {
                 throwable.printStackTrace()
             }
         }
+    }
+
+    fun initMovie(movieId: String) {
+        _movieId.value = movieId
     }
 
     override fun onCleared() {

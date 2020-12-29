@@ -22,7 +22,7 @@ data class Movie(
     val posterUrl: String,
     val imdbRating: String,
     val imdbVotes: String,
-    val totalSeasons: String,
+    val totalSeasons: String?,
     val Response: String
 )
 

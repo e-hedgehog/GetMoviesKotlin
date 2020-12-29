@@ -28,7 +28,7 @@ class MoviesSearchFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.moviesSearchRecyclerView.adapter = MoviesAdapter {
-            findNavController().navigate(MoviesSearchFragmentDirections.actionMoviesSearchToMovieDetails())
+            findNavController().navigate(MoviesSearchFragmentDirections.actionMoviesSearchToMovieDetails(it.id))
         }
 
         return binding.root
