@@ -26,10 +26,10 @@ class MoviesSearchViewModel : ViewModel() {
 
     init {
         Application.appComponent.injectMoviesSearchViewModel(this)
-        searchMovies("spider", "movie", 1)
+//        searchMovies("spider", "movie", 1)
     }
 
-    private fun searchMovies(search: String, type: String, page: Int) {
+    fun searchMovies(search: String, type: String, page: Int) {
         coroutineScope.launch {
             try {
                 val moviesDeferred = moviesApi.searchMovies(search, type, page)

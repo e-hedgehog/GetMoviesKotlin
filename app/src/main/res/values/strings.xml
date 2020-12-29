@@ -9,4 +9,5 @@
     <string name="movie_genre_label">Genre:</string>
     <string name="movie_writer_label">Writer:</string>
     <string name="movie_actors_label">Actors:</string>
+    <string name="menu_search_title">Search</string>
 </resources>
