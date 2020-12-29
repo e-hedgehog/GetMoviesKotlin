@@ -24,6 +24,8 @@ class MoviesSearchFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_movies_search, container, false)
         viewModel = ViewModelProvider(this).get(MoviesSearchViewModel::class.java)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         binding.moviesSearchRecyclerView.adapter = MoviesAdapter {
             findNavController().navigate(MoviesSearchFragmentDirections.actionMoviesSearchToMovieDetails())

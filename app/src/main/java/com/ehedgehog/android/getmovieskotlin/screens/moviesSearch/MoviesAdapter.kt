@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ehedgehog.android.getmovieskotlin.R
 import com.ehedgehog.android.getmovieskotlin.databinding.ItemListMovieBinding
-import com.ehedgehog.android.getmovieskotlin.entities.Movie
+import com.ehedgehog.android.getmovieskotlin.network.MoviesSearchItem
 
-class MoviesAdapter(private val clickListener: (movie: Movie) -> Unit) :
-    ListAdapter<Movie, MoviesAdapter.MovieViewHolder>(DiffCallback) {
+class MoviesAdapter(private val clickListener: (movie: MoviesSearchItem) -> Unit) :
+    ListAdapter<MoviesSearchItem, MoviesAdapter.MovieViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val binding: ItemListMovieBinding = DataBindingUtil.inflate(
@@ -25,19 +25,18 @@ class MoviesAdapter(private val clickListener: (movie: Movie) -> Unit) :
         holder.bind(movie)
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<MoviesSearchItem>() {
+        override fun areItemsTheSame(oldItem: MoviesSearchItem, newItem: MoviesSearchItem): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+        override fun areContentsTheSame(oldItem: MoviesSearchItem, newItem: MoviesSearchItem): Boolean {
             return oldItem.id == newItem.id
         }
     }
 
-    class MovieViewHolder(private val binding: ItemListMovieBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(movie: Movie) {
+    class MovieViewHolder(private val binding: ItemListMovieBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: MoviesSearchItem) {
             binding.movie = movie
             binding.executePendingBindings()
         }
