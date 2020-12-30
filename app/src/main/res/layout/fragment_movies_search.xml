@@ -10,10 +10,20 @@
             type="com.ehedgehog.android.getmovieskotlin.screens.moviesSearch.MoviesSearchViewModel" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/movies_search_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/movies_search_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:spinnerMode="dialog"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/movies_search_recycler_view"
@@ -23,6 +33,16 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_list_movie"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/movies_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:text="@string/empty_view"
+            android:textAlignment="center"
+            android:textSize="28sp" />
+
+    </LinearLayout>
 
 </layout>

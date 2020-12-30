@@ -8,7 +8,7 @@ interface MoviesApi {
 
     @GET("/")
     fun searchMovies(
-        @Query("s") s: String,
+        @Query("s") s: String?,
         @Query("type") type: String,
         @Query("page") page: Int
     ): Deferred<MoviesResponse>

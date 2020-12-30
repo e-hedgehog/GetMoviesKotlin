@@ -2,6 +2,8 @@ package com.ehedgehog.android.getmovieskotlin.screens.moviesSearch
 
 import android.os.Bundle
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -38,9 +40,25 @@ class MoviesSearchFragment : Fragment() {
         }
 
         context?.let {
-            val storedQuery = MoviesPreferences.getStoredQuery(it)
-            if (!storedQuery.isNullOrEmpty())
-                viewModel.searchMovies(storedQuery, "movie", 1)
+            val adapter = ArrayAdapter.createFromResource(it, R.array.types_array, android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.moviesSearchSpinner.adapter = adapter
+
+            binding.moviesSearchSpinner.setSelection(MoviesPreferences.getStoredTypeIndex(it))
+        }
+
+        binding.moviesSearchSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                context?.let { MoviesPreferences.setStoredTypeIndex(it, position) }
+                val query = context?.let { MoviesPreferences.getStoredQuery(it) }
+                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, 1)
+            }
+
         }
 
         return binding.root
@@ -72,7 +90,7 @@ class MoviesSearchFragment : Fragment() {
 
                 val query = newText.trim().toLowerCase(Locale.getDefault())
                 context?.let { MoviesPreferences.setStoredQuery(it, query) }
-                viewModel.searchMovies(query, "movie", 1)
+                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, 1)
 
                 return false
             }
