@@ -15,9 +15,10 @@ fun setListItems(recyclerView: RecyclerView, data: List<MoviesSearchItem>?) {
 
 @BindingAdapter("imageUrl")
 fun setImageByUrl(imageView: ImageView, url: String?) {
-    Glide.with(imageView.context)
-        .load(url)
-        .centerCrop()
-        .fitCenter()
-        .into(imageView)
+    if (!url.isNullOrEmpty() && url != "N/A")
+        Glide.with(imageView.context)
+            .load(url)
+            .centerCrop()
+            .fitCenter()
+            .into(imageView)
 }

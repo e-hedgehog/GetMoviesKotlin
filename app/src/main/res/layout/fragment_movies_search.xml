@@ -5,44 +5,63 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.ehedgehog.android.getmovieskotlin.screens.moviesSearch.MoviesSearchViewModel" />
     </data>
 
-    <LinearLayout
-        android:id="@+id/movies_search_container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <Spinner
-            android:id="@+id/movies_search_spinner"
+        <LinearLayout
+            android:id="@+id/movies_search_container"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/movies_search_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:spinnerMode="dialog"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movies_search_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{(viewModel.listMovies == null || viewModel.listMovies.empty) ? View.GONE : View.VISIBLE}"
+                app:listItems="@{viewModel.listMovies}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_list_movie"/>
+
+            <TextView
+                android:id="@+id/movies_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:padding="16dp"
+                android:visibility="@{(viewModel.listMovies == null || viewModel.listMovies.empty) ? View.VISIBLE : View.GONE}"
+                android:text="@string/empty_view"
+                android:textAlignment="center"
+                android:textSize="28sp" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/movies_search_progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:spinnerMode="dialog"/>
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/movies_search_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:listItems="@{viewModel.listMovies}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_list_movie"/>
 
-        <TextView
-            android:id="@+id/movies_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:padding="16dp"
-            android:text="@string/empty_view"
-            android:textAlignment="center"
-            android:textSize="28sp" />
-
-    </LinearLayout>
+    </FrameLayout>
 
 </layout>

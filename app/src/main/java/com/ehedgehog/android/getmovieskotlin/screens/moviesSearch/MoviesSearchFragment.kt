@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ehedgehog.android.getmovieskotlin.MoviesPreferences
 import com.ehedgehog.android.getmovieskotlin.R
 import com.ehedgehog.android.getmovieskotlin.databinding.FragmentMoviesSearchBinding
@@ -39,6 +41,24 @@ class MoviesSearchFragment : Fragment() {
             findNavController().navigate(MoviesSearchFragmentDirections.actionMoviesSearchToMovieDetails(it.id))
         }
 
+        binding.moviesSearchRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = binding.moviesSearchRecyclerView.layoutManager as LinearLayoutManager
+                val visibleItemsCount = layoutManager.childCount
+                val invisibleItemsCount = layoutManager.findFirstVisibleItemPosition()
+                val totalItemsCount = layoutManager.itemCount
+
+                if ((visibleItemsCount + invisibleItemsCount) >= totalItemsCount) {
+                    if ((viewModel.paginationHelper.currentPage <= viewModel.paginationHelper.pagesCount) && viewModel.isLoading.value == false) {
+                        viewModel.paginationHelper.nextPage()
+                        val query = context?.let { MoviesPreferences.getStoredQuery(it) }
+                        viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, viewModel.paginationHelper.currentPage)
+                    }
+                }
+            }
+        })
+
         context?.let {
             val adapter = ArrayAdapter.createFromResource(it, R.array.types_array, android.R.layout.simple_spinner_item)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -56,7 +76,8 @@ class MoviesSearchFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 context?.let { MoviesPreferences.setStoredTypeIndex(it, position) }
                 val query = context?.let { MoviesPreferences.getStoredQuery(it) }
-                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, 1)
+                viewModel.paginationHelper.reset()
+                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, viewModel.paginationHelper.currentPage)
             }
 
         }
@@ -88,9 +109,10 @@ class MoviesSearchFragment : Fragment() {
                 if (newText == null || newText.length < 3)
                     return false
 
+                viewModel.paginationHelper.reset()
                 val query = newText.trim().toLowerCase(Locale.getDefault())
                 context?.let { MoviesPreferences.setStoredQuery(it, query) }
-                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, 1)
+                viewModel.searchMovies(query, binding.moviesSearchSpinner.selectedItem as String, viewModel.paginationHelper.currentPage)
 
                 return false
             }

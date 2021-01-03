@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="false">
-        <activity android:name=".MainActivity" >
+        <activity android:name=".screens.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

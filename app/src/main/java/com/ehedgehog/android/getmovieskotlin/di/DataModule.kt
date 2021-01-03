@@ -1,6 +1,7 @@
 package com.ehedgehog.android.getmovieskotlin.di
 
 import com.ehedgehog.android.getmovieskotlin.BuildConfig
+import com.ehedgehog.android.getmovieskotlin.PaginationHelper
 import com.ehedgehog.android.getmovieskotlin.network.AuthInterceptor
 import com.ehedgehog.android.getmovieskotlin.network.MoviesApi
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -49,6 +50,12 @@ class DataModule {
             .addInterceptor(HttpLoggingInterceptor())
             .addInterceptor(AuthInterceptor())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePaginationHelper(): PaginationHelper {
+        return PaginationHelper()
     }
 
 }
