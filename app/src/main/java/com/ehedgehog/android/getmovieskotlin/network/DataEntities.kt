@@ -1,6 +1,8 @@
 package com.ehedgehog.android.getmovieskotlin.network
 
 import com.squareup.moshi.Json
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 data class Movie(
     @Json(name = "imdbID")
@@ -34,12 +36,13 @@ data class MoviesResponse(
     val searchResult: List<MoviesSearchItem>
 )
 
-data class MoviesSearchItem(
+open class MoviesSearchItem(
+    @PrimaryKey
     @Json(name = "imdbID")
-    val id: String,
-    val Title: String,
-    val Year: String,
-    val Type: String,
+    var id: String? = null,
+    var Title: String? = null,
+    var Year: String? = null,
+    var Type: String? = null,
     @Json(name = "Poster")
-    val posterUrl: String
-)
+    var posterUrl: String? = null
+): RealmObject()

@@ -41,7 +41,7 @@ class MovieDetailsViewModel : ViewModel() {
         }
     }
 
-    fun initMovie(movieId: String) {
+    fun initMovie(movieId: String?) {
         _movieId.value = movieId
     }
 

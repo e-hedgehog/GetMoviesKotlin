@@ -8,6 +8,7 @@ import com.ehedgehog.android.getmovieskotlin.Application
 import com.ehedgehog.android.getmovieskotlin.PaginationHelper
 import com.ehedgehog.android.getmovieskotlin.network.MoviesApi
 import com.ehedgehog.android.getmovieskotlin.network.MoviesSearchItem
+import com.ehedgehog.android.getmovieskotlin.screens.DatabaseManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,6 +23,9 @@ class MoviesSearchViewModel : ViewModel() {
     @Inject
     lateinit var paginationHelper: PaginationHelper
 
+    @Inject
+    lateinit var databaseManager: DatabaseManager
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -33,6 +37,7 @@ class MoviesSearchViewModel : ViewModel() {
 
     init {
         Application.appComponent.injectMoviesSearchViewModel(this)
+        _listMovies.value = databaseManager.getStoredMovies()
     }
 
     fun searchMovies(search: String?, type: String, page: Int) {
@@ -43,11 +48,13 @@ class MoviesSearchViewModel : ViewModel() {
                 val moviesDeferred = moviesApi.searchMovies(search, type, page)
                 val searchResult = moviesDeferred.await()
                 paginationHelper.totalItems = searchResult.totalResults
-                if (paginationHelper.currentPage == 1 || _listMovies.value == null)
+                if (paginationHelper.currentPage == 1 || _listMovies.value == null) {
+                    databaseManager.clearMovies()
                     _listMovies.value = searchResult.searchResult
-                else
+                } else
                     _listMovies.value = _listMovies.value?.plus(searchResult.searchResult)
 
+                databaseManager.saveMovies(searchResult.searchResult)
                 _isLoading.value = false
             } catch (throwable: Throwable) {
                 _isLoading.value = false

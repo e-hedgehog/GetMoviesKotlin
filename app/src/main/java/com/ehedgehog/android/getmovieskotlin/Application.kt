@@ -10,7 +10,7 @@ class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        Realm.init(this)
+        Realm.init(this)
     }
 
     companion object {

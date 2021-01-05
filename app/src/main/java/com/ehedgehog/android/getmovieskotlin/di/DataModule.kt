@@ -4,11 +4,13 @@ import com.ehedgehog.android.getmovieskotlin.BuildConfig
 import com.ehedgehog.android.getmovieskotlin.PaginationHelper
 import com.ehedgehog.android.getmovieskotlin.network.AuthInterceptor
 import com.ehedgehog.android.getmovieskotlin.network.MoviesApi
+import com.ehedgehog.android.getmovieskotlin.screens.DatabaseManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
+import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -56,6 +58,18 @@ class DataModule {
     @Singleton
     fun providePaginationHelper(): PaginationHelper {
         return PaginationHelper()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRealmInstance(): Realm {
+        return Realm.getDefaultInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseManager(realm: Realm): DatabaseManager {
+        return DatabaseManager(realm)
     }
 
 }

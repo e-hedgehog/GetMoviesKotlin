@@ -18,6 +18,7 @@ buildscript {
         version_logging_interceptor = "4.1.0"
         version_dagger = "2.24"
         version_realm_plugin = "5.9.1"
+        version_rxjava = "2.2.12"
     }
     repositories {
         google()
